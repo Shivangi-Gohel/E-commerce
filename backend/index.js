@@ -1,6 +1,5 @@
 import express from 'express';
 import { connectDB } from './config/db.js';
-import auth from './routes/authRouter.js';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -13,6 +12,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+import auth from './routes/authRouter.js';
 app.use('/api/auth', auth);
 
 const PORT = process.env.PORT;

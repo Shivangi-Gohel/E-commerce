@@ -13,7 +13,16 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-    }
+    },
+    address: [
+        {
+            area: String,
+            city: String,
+            state: String,
+            pincode: String,
+            country: String
+        }
+    ]
 })
 
 export const User = mongoose.model("User", userSchema);
