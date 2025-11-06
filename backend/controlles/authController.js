@@ -32,9 +32,11 @@ const registerUser = async (req, res) => {
     });
     await newUser.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    return res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
 
@@ -73,9 +75,11 @@ const loginUser = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({ message: "Login successful", token, user });
+    return res.status(200).json({ message: "Login successful", token, user });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
 
@@ -86,10 +90,30 @@ const logoutUser = (req, res) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
-    res.status(200).json({ message: "Logout successful" });
+    return res.status(200).json({ message: "Logout successful" });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
 
-export { registerUser, loginUser, logoutUser };
+const updateUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { name, email, address, phone, isAdmin } = req.body;
+    const updatedData = { name, email, address, phone, isAdmin };
+    const updatedUser = await User.findByIdAndUpdate(userId, updatedData, {
+      new: true,
+    });
+    return res
+      .status(200)
+      .json({ message: "User updated successfully", user: updatedUser });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
+  }
+};
+
+export { registerUser, loginUser, logoutUser, updateUser };
