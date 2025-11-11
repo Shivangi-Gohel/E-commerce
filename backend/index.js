@@ -1,13 +1,15 @@
 import express from "express";
 import { connectDB } from "./config/db.js";
 import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 
 connectDB();
 
 app.use(cors({
-    origin: ["http://localhost:5173", "https://s-e-commerce.vercel.app", "e-commerce-mt17cr0e2-shivangi-gohels-projects.vercel.app"],
+    origin: process.env.ORIGIN,
     credentials: true,
 }));
 
