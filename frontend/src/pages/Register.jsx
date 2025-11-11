@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios"
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { URL } from "../constant.js";
+import { URL } from "../../constant.js";
 
 const Register = () => {
     const navigate = useNavigate();

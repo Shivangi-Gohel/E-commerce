@@ -12,6 +12,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
 app.get('/', (req, res) => {
     res.send("API is running...");
@@ -20,7 +21,7 @@ app.get('/', (req, res) => {
 import router from './routes/authRouter.js';
 app.use('/api/auth', router);
 
-import productRouter from './routes/adminRouter.js';
+import productRouter from './routes/productRouter.js';
 app.use('/api/products', productRouter);
 
 app.listen(8000);

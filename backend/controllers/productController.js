@@ -2,14 +2,18 @@ import { Product } from "../models/productModel.js";
 
 const addProduct = async(req, res) => {
     try {
-        const { name, description, price, category, stock, images } = req.body;
+        console.log(req.files);
+        const { name, description, price, category, stock } = req.body;
 
         if (!name || !price || !category || !stock) {
             return res.status(400).json({ message: "Please fill all required fields" });
         }
-        if(images.length === 0) {
-            return res.status(400).json({ message: "Please upload at least one product image" });
+        if(!req.files || req.files.length === 0) {
+            return res.status(400).json({ message: "At least one product image is required" });
         }
+
+        const images = req.files.map(file => file.path);
+
         const newProduct = new Product({
             name,
             description,
