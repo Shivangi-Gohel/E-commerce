@@ -15,3 +15,14 @@ export const verifyJWT = (req, res, next) => {
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
     }
 }
+
+export const verifyAdmin = (req, res, next) => {
+    verifyJWT(req, res, () => {
+        if (req.user.isAdmin) {
+            next();
+        }
+        else {
+            return res.status(403).json({ message: "Forbidden: Admins only" });
+        }
+    });
+}

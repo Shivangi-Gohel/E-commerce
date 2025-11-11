@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { URL } from "../constant.js";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Login = () => {
 
     const onSubmit = async (data) => {
         try {
-            const response = await axios.post("http://localhost:8000/api/auth/login", data, {withCredentials: true});
+            const response = await axios.post(`${URL}/auth/login`, data, {withCredentials: true});
             console.log("Login successful:", response.data);
             localStorage.setItem("token", response.data.token);
         } catch (error) {
@@ -29,11 +30,13 @@ const Login = () => {
         <div className="mt-10 flex flex-col gap-6   ">
           <div className="flex flex-col gap-2">
             <label className="font-semibold">Email Address</label>
-            <input {...register("email", {required: true})} disabled={isSubmitting} type="email" className="border rounded shadow p-2 w-60 sm:w-80 md:w-100" placeholder="your@email.com" />
+            <input {...register("email", {required: 'please enter email'})} disabled={isSubmitting} type="email" className="border rounded shadow p-2 w-60 sm:w-80 md:w-100" placeholder="your@email.com" />
+            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
           </div>
           <div className="flex flex-col gap-2">
             <label className="font-semibold">Password</label>
-            <input {...register("password", {required: true})} disabled={isSubmitting} type="password" className="border rounded shadow p-2 w-60 sm:w-80 md:w-100" placeholder="••••••••" />
+            <input {...register("password", {required: 'please enter password'})} disabled={isSubmitting} type="password" className="border rounded shadow p-2 w-60 sm:w-80 md:w-100" placeholder="••••••••" />
+            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
           </div>
           <button disabled={isSubmitting} type="submit" className="border rounded shadow p-2 w-60 sm:w-80 md:w-100 bg-amber-950 text-white font-semibold">{isSubmitting ? "Login..." : "Login"}</button>
           <p className="text-center text-gray-500">Do not have an account? <span  onClick={() => navigate('/register')} className="text-amber-950 cursor-pointer">Sign up</span></p>

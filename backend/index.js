@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 import router from './routes/authRouter.js';
 app.use('/api/auth', router);
 
-import productRouter from './routes/productRouter.js';
+import productRouter from './routes/adminRouter.js';
 app.use('/api/products', productRouter);
 
 app.listen(8000);

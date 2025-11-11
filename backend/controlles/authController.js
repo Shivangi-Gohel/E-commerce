@@ -7,7 +7,7 @@ dotenv.config();
 
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password, address, phone, isAdmin } = req.body;
+    const { name, email, password, address, phone } = req.body;
     if (!name || !email || !password) {
       return res
         .status(400)
@@ -22,26 +22,14 @@ const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    var newUser = null;
-    if (email === "admin@gmail.com" && password === "Admin@123") {
-      newUser = new User({
-        name,
-        email,
-        password: hashedPassword,
-        address,
-        phone,
-        isAdmin: true,
-      });
-    } else {
-      newUser = new User({
-        name,
-        email,
-        password: hashedPassword,
-        address,
-        phone,
-        isAdmin,
-      });
-    }
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      address,
+      phone,
+      isAdmin,
+    });
 
     await newUser.save();
 
