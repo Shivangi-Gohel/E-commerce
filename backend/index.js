@@ -7,7 +7,7 @@ const app = express();
 connectDB();
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://s-e-commerce.vercel.app", "e-commerce-mt17cr0e2-shivangi-gohels-projects.vercel.app"],
     credentials: true,
 }));
 
