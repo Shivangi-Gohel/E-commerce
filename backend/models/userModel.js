@@ -24,6 +24,6 @@ const userSchema = new mongoose.Schema({
     phone: {
         type: String,
     },
-});
+}, { timestamps: true });
 
 export const User = mongoose.model("User", userSchema);

@@ -82,8 +82,20 @@ const deleteProduct = async(req, res) => {
 
 const getAllProducts = async(req, res) => {
     try {
-        const products = await Product.find({});
-        return res.status(200).json({ products });
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        const startIndex = (page - 1) * limit;
+        const total = await Product.countDocuments({ isDeleted: false });
+
+        const products = await Product.find({}).skip(startIndex).limit(limit);
+        return res.status(200).json({ 
+            page,
+            limit,
+            total, 
+            pages: Math.ceil(total / limit), 
+            data: products
+        });
     } catch (error) {
         return res.status(500).json({ message: "Server error", error: error.message });
     }
