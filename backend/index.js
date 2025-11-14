@@ -26,4 +26,7 @@ app.use('/api/auth', router);
 import productRouter from './routes/productRouter.js';
 app.use('/api/products', productRouter);
 
+import cartRouter from './routes/cartRouter.js';
+app.use('/api/cart', cartRouter);
+
 app.listen(8000);
