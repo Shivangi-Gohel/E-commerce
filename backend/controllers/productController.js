@@ -2,7 +2,6 @@ import { Product } from "../models/productModel.js";
 
 const addProduct = async(req, res) => {
     try {
-        console.log(req.files);
         const { name, description, price, category, stock } = req.body;
 
         if (!name || !price || !category || !stock) {
@@ -82,13 +81,22 @@ const deleteProduct = async(req, res) => {
 
 const getAllProducts = async(req, res) => {
     try {
+        const user = req.user
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
 
         const startIndex = (page - 1) * limit;
-        const total = await Product.countDocuments({ isDeleted: false });
+        let total;
+        let products;
+        if(user?.isAdmin) {
+            total = await Product.countDocuments({});
+            products = await Product.find({}).skip(startIndex).limit(limit);
+            console.log(total, products);
+        } else {
+            total = await Product.countDocuments({isDeleted: false});
+            products = await Product.find({ isDeleted: false }).skip(startIndex).limit(limit);
+        }
 
-        const products = await Product.find({}).skip(startIndex).limit(limit);
         return res.status(200).json({ 
             page,
             limit,
@@ -103,12 +111,18 @@ const getAllProducts = async(req, res) => {
 
 const getProductById = async(req, res) => {
     try {
+        const user = req.user;
         const { productId } = req.params;
         const product = await Product.findById(productId);
 
         if(!product) {
             return res.status(404).json({ message: "Product not found" });
         }
+
+        if(user?.isAdmin === false && product.isDeleted) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        
         return res.status(200).json({ product });
     } catch (error) {
         return res.status(500).json({ message: "Server error", error: error.message });
