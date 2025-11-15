@@ -29,4 +29,7 @@ app.use('/api/products', productRouter);
 import cartRouter from './routes/cartRouter.js';
 app.use('/api/cart', cartRouter);
 
+import orderRouter from './routes/orderRouter.js';
+app.use('/api/orders', orderRouter);
+
 app.listen(8000);
