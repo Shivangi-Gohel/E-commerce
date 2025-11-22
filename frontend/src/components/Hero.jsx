@@ -15,7 +15,7 @@ const Hero = () => {
           </div>
           <div className='mt-6 mb-6 text-amber-950/70 font-semibold'>Discover our latest arrivals that blend classic designs with contemporary quality. <br /> Elevate your wardrobe with pieces that stand the test of time.</div>
           <div className='md:flex gap-5'>
-            <Button className="text-white bg-amber-950 md:m-0 m-1">Shop Now <img src="https://images.icon-icons.com/1993/PNG/512/arrow_arrows_back_direction_left_navigation_right_icon_123236.png" className='h-5 w-5 invert'  alt="" /></Button>
+            <Button className="text-white bg-amber-950 md:m-0 m-1 hover:bg-amber-950/90">Shop Now <img src="https://images.icon-icons.com/1993/PNG/512/arrow_arrows_back_direction_left_navigation_right_icon_123236.png" className='h-5 w-5 invert'  alt="" /></Button>
             <Button variant="outline" className='text-amber-950 md:m-0 m-1'>Learn more</Button>
           </div>
         </div>

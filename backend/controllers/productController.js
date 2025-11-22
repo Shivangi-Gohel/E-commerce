@@ -91,7 +91,6 @@ const getAllProducts = async(req, res) => {
         if(user?.isAdmin) {
             total = await Product.countDocuments({});
             products = await Product.find({}).skip(startIndex).limit(limit);
-            console.log(total, products);
         } else {
             total = await Product.countDocuments({isDeleted: false});
             products = await Product.find({ isDeleted: false }).skip(startIndex).limit(limit);
