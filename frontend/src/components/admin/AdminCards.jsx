@@ -35,9 +35,6 @@ const AdminCards = () => {
   const totalRevenue = ordersData.orders
     .filter((order) => order.status === "Delivered")
     .reduce((sum, order) => sum + order.totalAmount, 0);
-  const totalUsers = usersData.users.filter(
-    (user) => user.isAdmin === false
-  ).length;
 
   return (
     <>
@@ -71,7 +68,7 @@ const AdminCards = () => {
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold text-blue-600">
-              {ordersData.orders.length}
+              {ordersData.total}
             </p>
           </CardContent>
         </Card>
@@ -90,7 +87,7 @@ const AdminCards = () => {
             <CardTitle>Total users</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-blue-600">{totalUsers}</p>
+            <p className="text-3xl font-bold text-blue-600">{usersData.total}</p>
           </CardContent>
         </Card>
       </div>

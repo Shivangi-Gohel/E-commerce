@@ -118,8 +118,13 @@ const updateUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password");
-    return res.status(200).json({ users });
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const startIndex = (page - 1) * limit;
+    const total = await User.countDocuments({isAdmin : false});
+    const users = await User.find().select("-password").skip(startIndex).limit(limit);
+
+    return res.status(200).json({ users, total });
   } catch (error) {
     return res
       .status(500)

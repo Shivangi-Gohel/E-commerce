@@ -105,8 +105,13 @@ const cancelOrder = async (req, res) => {
 
 const getAllOrders = async (req, res) => {
     try {
-        const orders = await Order.find().sort({createdAt: -1}).populate("items.productId").populate("userId", "name email");
-        return res.status(200).json({ orders });
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
+
+        const startIndex = (page - 1) * limit;
+        const total = await Order.countDocuments();
+        const orders = await Order.find().sort({createdAt: -1}).populate("items.productId").populate("userId", "name email").skip(startIndex).limit(limit);
+        return res.status(200).json({ orders, total });
     } catch (error) {
         return res.status(500).json({ message: "Server error", error: error.message });
     }

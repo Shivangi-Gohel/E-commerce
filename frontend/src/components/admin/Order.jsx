@@ -12,12 +12,14 @@ import {
 } from "../ui/table";
 import { Pencil } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "../ui/button";
 
 const Order = () => {
+  const [page, setPage] = useState(1);
   const queryClient = useQueryClient();
   const [openStatusFor, setOpenStatusFor] = useState(null);
   const [loadingStatus, setLoadingStatus] = useState(null);
-  const { data, isLoading, isError } = useGetOrders();
+  const { data, isLoading, isError } = useGetOrders(page);
   const { mutate: updateOrderStatus } = useUpdateOrderStatus(); 
 
   if (isLoading) {
@@ -167,6 +169,17 @@ const Order = () => {
               </TableBody>
             </Table>
           </CardContent>
+          <div className="flex gap-3 m-2 justify-end">
+            <Button disabled={page === 1} onClick={() => setPage(page - 1)}>
+              prev
+            </Button>
+            <Button
+              disabled={data.orders.length < 10}
+              onClick={() => setPage(page + 1)}
+            >
+              Next
+            </Button>
+          </div>
         </Card>
       </TabsContent>
     </div>

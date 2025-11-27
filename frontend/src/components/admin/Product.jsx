@@ -24,7 +24,6 @@ const Product = () => {
     return <div>Error loading products.</div>;
   }
 
-  console.log(data.data);
   return (
     <div>
       <TabsContent value="products">

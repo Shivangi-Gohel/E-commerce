@@ -4,12 +4,12 @@ import { URL } from "../../constant.js";
 
 const ORDER_API = `${URL}/orders`;
 
-export const useGetOrders = () => {
+export const useGetOrders = (page) => {
     return useQuery({
-        queryKey: ["orders"],
+        queryKey: ["orders", page],
         queryFn: async () => {
             const token = localStorage.getItem("token");
-            const res = await axios.get(`${ORDER_API}/allOrders`, {
+            const res = await axios.get(`${ORDER_API}/allOrders?page=${page}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             return res.data;
