@@ -37,6 +37,11 @@ const orderSchema = new mongoose.Schema({
         enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
         default: "Pending",
     },
+    payment: {
+        type: String,
+        enum: ["Pending", "Success"],
+        default: "Pending"
+    }
 }, { timestamps: true });
 
 export const Order = mongoose.model("Order", orderSchema);

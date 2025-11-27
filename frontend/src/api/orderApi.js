@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { URL } from "../../constant.js";
 
@@ -15,4 +15,19 @@ export const useGetOrders = () => {
             return res.data;
         }
     })
+}
+
+export const useUpdateOrderStatus = () => {
+    return useMutation({
+        mutationFn: async ({ orderId, status }) => {
+            const token = localStorage.getItem("token");
+            const res = await axios.put(`${ORDER_API}/updateStatus`, 
+                { orderId, status },
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+            return res.data;
+        }
+    });
 }

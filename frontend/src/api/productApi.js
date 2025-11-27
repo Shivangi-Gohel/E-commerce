@@ -4,14 +4,17 @@ import { URL } from "../../constant.js";
 
 const PRODUCT_API = `${URL}/products`;
 
-export const useGetProducts = () => {
+export const useGetProducts = (page) => {
   return useQuery({
-    queryKey: ["products"],
+    queryKey: ["products", page],
     queryFn: async () => {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${PRODUCT_API}/all`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        `${PRODUCT_API}/all?page=${page}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       return res.data;
     },
   });

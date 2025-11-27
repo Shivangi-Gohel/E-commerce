@@ -119,7 +119,6 @@ const updateUser = async (req, res) => {
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
-    console.log(users);
     return res.status(200).json({ users });
   } catch (error) {
     return res

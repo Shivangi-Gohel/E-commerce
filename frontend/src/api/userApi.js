@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { URL } from "../../constant.js";
 
-const USER_API = `${URL}/products`;
+const USER_API = `${URL}/auth`;
 
 export const useGetUsers = () => {
     return useQuery({

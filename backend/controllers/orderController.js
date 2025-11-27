@@ -75,12 +75,10 @@ const updateOrderStatus = async (req, res) => {
             return res.status(400).json({ message: "Order ID and status are required" });
         }
 
-        const order = await Order.findById(orderId);
+        const order = await Order.findByIdAndUpdate(orderId, { status }, { new: true });
         if(!order) {
             return res.status(404).json({ message: "Order not found" });
         }
-        order.status = status;
-        await order.save();
         return res.status(200).json({ message: "Order status updated successfully", order });
     } catch (error) {
         return res.status(500).json({ message: "Server error", error: error.message });

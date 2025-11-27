@@ -83,7 +83,7 @@ const getAllProducts = async(req, res) => {
     try {
         const user = req.user
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        const limit = 10;
 
         const startIndex = (page - 1) * limit;
         let total;
