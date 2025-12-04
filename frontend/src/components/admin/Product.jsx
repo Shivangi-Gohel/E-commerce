@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TabsContent } from "../ui/tabs";
 import { Card, CardContent } from "../ui/card";
-import { useGetProducts } from "@/api/productApi";
+import { useGetProductById, useGetProducts, useUpdateProduct } from "@/api/productApi";
 import {
   Table,
   TableBody,
@@ -12,16 +12,53 @@ import {
 } from "../ui/table";
 import { Button } from "../ui/button";
 import { Pencil } from "lucide-react";
+import { X } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Product = () => {
   const [page, setPage] = useState(1);
   const { data, isLoading, isError } = useGetProducts(page);
+  const [openUpdateFor, setOpenUpdateFor] = useState(null);
+  const queryClient = useQueryClient();
+  const { data: productData, isLoading: productLoading, isError: productError} = useGetProductById(openUpdateFor);
+  const [formData, setFormData] = useState({
+    name: productData?.product.name || "",
+    price: productData?.product.price || "",
+    stock: productData?.product.stock || "",
+    category: productData?.product.category || "",
+    isDeleted: productData?.product.isDeleted || false,
+  });
+  const { mutate: updateProduct } = useUpdateProduct();
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
   if (isError) {
     return <div>Error loading products.</div>;
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log("Change Detected:", name, value);
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+
+  }
+
+  const handleUpdateProduct = (e) => {
+    e.preventDefault();
+    updateProduct({productId: openUpdateFor, ...formData},
+      {
+        onSuccess: (data) => {
+          console.log("Product updated successfully:", data);
+          setOpenUpdateFor(null);
+          queryClient.invalidateQueries(["products"]);
+        }
+      }
+    );
+
   }
 
   return (
@@ -62,7 +99,102 @@ const Product = () => {
                       {product.category}
                     </TableCell>
                     <TableCell>
-                      <Pencil className="h-5 w-5 text-orange-600 cursor-pointer hover:text-orange-800" />
+                      <Pencil
+                        onClick={() =>
+                          setOpenUpdateFor(
+                            openUpdateFor === product._id ? null : product._id
+                          )
+                        }
+                        className="h-5 w-5 text-orange-600 cursor-pointer hover:text-orange-800"
+                      />
+                      {openUpdateFor === product._id && (
+                        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center z-10">
+                          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+                            <div className="flex justify-between items-center mb-4">
+                              <h2 className="text-xl font-bold mb-4">
+                                Update Product
+                              </h2>
+                              <X
+                                onClick={() => setOpenUpdateFor(false)}
+                                className="h-6 w-6 text-gray-600 cursor-pointer hover:text-gray-800 mb-4"
+                              />
+                            </div>
+                            <form className="grid gap-4">
+                              <div>
+                                <label className="block mb-1 font-medium">
+                                  Name
+                                </label>
+                                <input
+                                  type="text"
+                                  className="w-full border border-gray-300 p-2 rounded"
+                                  placeholder="Product Name"
+                                  defaultValue={productData?.product.name}
+                                  name="name"
+                                  value={formData.name}
+                                  onChange={handleChange}
+                                />
+                              </div>
+                              <div>
+                                <label className="block mb-1 font-medium">
+                                  Price
+                                </label>
+                                <input
+                                  type="number"
+                                  className="w-full border border-gray-300 p-2 rounded"
+                                  placeholder="Product Price"
+                                  defaultValue={productData?.product.price}
+                                  name="price"
+                                  value={formData.price}
+                                  onChange={handleChange}
+                                />
+                              </div>
+                              <div>
+                                <label className="block mb-1 font-medium">
+                                  Stock
+                                </label>
+                                <input
+                                  type="number"
+                                  className="w-full border border-gray-300 p-2 rounded"
+                                  placeholder="Product Stock"
+                                  defaultValue={productData?.product.stock}
+                                  name="stock"
+                                  value={formData.stock}
+                                  onChange={handleChange}
+                                />
+                              </div>
+                              <div>
+                                <label className="block mb-1 font-medium">
+                                  Category
+                                </label>
+                                <input
+                                  type="text"
+                                  className="w-full border border-gray-300 p-2 rounded"
+                                  placeholder="Product Category"
+                                  defaultValue={productData?.product.category}
+                                  name="category"
+                                  value={formData.category}
+                                  onChange={handleChange}
+                                />
+                              </div>
+                              <div>
+                                <label className="block mb-1 font-medium">Status</label>
+                                <select
+                                  className="w-full border border-gray-300 p-2 rounded"
+                                  name="isDeleted"
+                                  onChange={handleChange}
+                                  defaultValue={productData?.product.isDeleted ? "Deleted" : "Active"}
+                                >
+                                  <option value={false}>Active</option>
+                                  <option value={true}>Deleted</option>
+                                </select>
+                              </div>
+                              <Button type="submit" className="mt-4 w-full" onClick={handleUpdateProduct}>
+                                Update Product
+                              </Button>
+                            </form>
+                          </div>
+                        </div>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
