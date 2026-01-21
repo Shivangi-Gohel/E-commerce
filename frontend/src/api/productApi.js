@@ -43,7 +43,7 @@ export const useUpdateProduct = () => {
       const token = localStorage.getItem("token");
       const res = await axios.patch(
         `${PRODUCT_API}/update`,
-        { productId, name: formData.name, price: formData.price, stock: formData.stock, category: formData.category },
+        { productId, name: formData.name, price: formData.price, stock: formData.stock, category: formData.category, isDeleted: formData.isDeleted },
         {
           headers: { Authorization: `Bearer ${token}` },
         }

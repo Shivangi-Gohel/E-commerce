@@ -31,7 +31,7 @@ const addProduct = async(req, res) => {
 
 const updateProduct = async(req, res) => {
     try {
-        const { productId, name, description, price, category, stock, images } = req.body;
+        const { productId, name, description, price, category, stock, images, isDeleted } = req.body;
         
         if(!productId) {
             return res.status(400).json({ message: "Product ID is required" });
@@ -43,7 +43,8 @@ const updateProduct = async(req, res) => {
             price,
             category,
             stock,
-            images
+            images,
+            isDeleted
         }, { new: true });
 
         if(!product) {

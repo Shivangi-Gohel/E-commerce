@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TabsContent } from "../ui/tabs";
 import { Card, CardContent } from "../ui/card";
-import { useGetProductById, useGetProducts, useUpdateProduct } from "@/api/productApi";
+import {
+  useGetProductById,
+  useGetProducts,
+  useUpdateProduct,
+} from "@/api/productApi";
 import {
   Table,
   TableBody,
@@ -20,7 +24,11 @@ const Product = () => {
   const { data, isLoading, isError } = useGetProducts(page);
   const [openUpdateFor, setOpenUpdateFor] = useState(null);
   const queryClient = useQueryClient();
-  const { data: productData, isLoading: productLoading, isError: productError} = useGetProductById(openUpdateFor);
+  const {
+    data: productData,
+    isLoading: productLoading,
+    isError: productError,
+  } = useGetProductById(openUpdateFor);
   const [formData, setFormData] = useState({
     name: productData?.product.name || "",
     price: productData?.product.price || "",
@@ -29,6 +37,18 @@ const Product = () => {
     isDeleted: productData?.product.isDeleted || false,
   });
   const { mutate: updateProduct } = useUpdateProduct();
+
+  useEffect(() => {
+    if (productData) {
+      setFormData({
+        name: productData.product.name || "",
+        price: productData.product.price || "",
+        stock: productData.product.stock || "",
+        category: productData.product.category || "",
+        isDeleted: productData.product.isDeleted || false,
+      });
+    }
+  }, [productData]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -39,27 +59,24 @@ const Product = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log("Change Detected:", name, value);
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
-
-  }
+  };
 
   const handleUpdateProduct = (e) => {
     e.preventDefault();
-    updateProduct({productId: openUpdateFor, ...formData},
+    updateProduct(
+      { productId: openUpdateFor, ...formData },
       {
         onSuccess: (data) => {
-          console.log("Product updated successfully:", data);
           setOpenUpdateFor(null);
           queryClient.invalidateQueries(["products"]);
-        }
-      }
+        },
+      },
     );
-
-  }
+  };
 
   return (
     <div>
@@ -102,7 +119,7 @@ const Product = () => {
                       <Pencil
                         onClick={() =>
                           setOpenUpdateFor(
-                            openUpdateFor === product._id ? null : product._id
+                            openUpdateFor === product._id ? null : product._id,
                           )
                         }
                         className="h-5 w-5 text-orange-600 cursor-pointer hover:text-orange-800"
@@ -128,7 +145,6 @@ const Product = () => {
                                   type="text"
                                   className="w-full border border-gray-300 p-2 rounded"
                                   placeholder="Product Name"
-                                  defaultValue={productData?.product.name}
                                   name="name"
                                   value={formData.name}
                                   onChange={handleChange}
@@ -142,7 +158,6 @@ const Product = () => {
                                   type="number"
                                   className="w-full border border-gray-300 p-2 rounded"
                                   placeholder="Product Price"
-                                  defaultValue={productData?.product.price}
                                   name="price"
                                   value={formData.price}
                                   onChange={handleChange}
@@ -156,7 +171,6 @@ const Product = () => {
                                   type="number"
                                   className="w-full border border-gray-300 p-2 rounded"
                                   placeholder="Product Stock"
-                                  defaultValue={productData?.product.stock}
                                   name="stock"
                                   value={formData.stock}
                                   onChange={handleChange}
@@ -170,25 +184,44 @@ const Product = () => {
                                   type="text"
                                   className="w-full border border-gray-300 p-2 rounded"
                                   placeholder="Product Category"
-                                  defaultValue={productData?.product.category}
                                   name="category"
                                   value={formData.category}
                                   onChange={handleChange}
                                 />
                               </div>
                               <div>
-                                <label className="block mb-1 font-medium">Status</label>
+                                <label className="block mb-1 font-medium">
+                                  Status
+                                </label>
                                 <select
                                   className="w-full border border-gray-300 p-2 rounded"
                                   name="isDeleted"
                                   onChange={handleChange}
-                                  defaultValue={productData?.product.isDeleted ? "Deleted" : "Active"}
+                                  value={formData.isDeleted}
                                 >
                                   <option value={false}>Active</option>
                                   <option value={true}>Deleted</option>
                                 </select>
+                                {/* <select
+                                  className="w-full border border-gray-300 p-2 rounded"
+                                  name="isDeleted"
+                                  value={formData.isDeleted}
+                                  onChange={(e) =>
+                                    setFormData({
+                                      ...formData,
+                                      isDeleted: e.target.value === "true",
+                                    })
+                                  }
+                                >
+                                  <option value="false">Active</option>
+                                  <option value="true">Deleted</option>
+                                </select> */}
                               </div>
-                              <Button type="submit" className="mt-4 w-full" onClick={handleUpdateProduct}>
+                              <Button
+                                type="submit"
+                                className="mt-4 w-full"
+                                onClick={handleUpdateProduct}
+                              >
                                 Update Product
                               </Button>
                             </form>
