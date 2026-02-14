@@ -9,12 +9,9 @@ export const useGetProducts = (page) => {
     queryKey: ["products", page],
     queryFn: async () => {
       const token = localStorage.getItem("token");
-      const res = await axios.get(
-        `${PRODUCT_API}/all?page=${page}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.get(`${PRODUCT_API}/all?page=${page}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       return res.data;
     },
   });
@@ -25,30 +22,55 @@ export const useGetProductById = (productId) => {
     queryKey: ["product", productId],
     queryFn: async () => {
       const token = localStorage.getItem("token");
-      const res = await axios.get(
-        `${PRODUCT_API}/${productId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.get(`${PRODUCT_API}/${productId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       return res.data;
     },
   });
-}
+};
 
 export const useUpdateProduct = () => {
   return useMutation({
     mutationFn: async ({ productId, ...formData }) => {
-      console.log("Updating product with ID:", productId, "and data:", formData);
+      console.log(
+        "Updating product with ID:",
+        productId,
+        "and data:",
+        formData,
+      );
       const token = localStorage.getItem("token");
       const res = await axios.patch(
         `${PRODUCT_API}/update`,
-        { productId, name: formData.name, price: formData.price, stock: formData.stock, category: formData.category, isDeleted: formData.isDeleted },
+        {
+          productId,
+          name: formData.name,
+          price: formData.price,
+          stock: formData.stock,
+          category: formData.category,
+          isDeleted: formData.isDeleted,
+        },
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
       return res.data;
-    }
+    },
   });
-}
+};
+
+export const useAddProduct = () => {
+  return useMutation({
+    mutationFn: async (formData) => {
+      const token = localStorage.getItem("token");
+      const res = await axios.post(`${PRODUCT_API}/add`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("Add product response:", res.data);
+      return res.data;
+    },
+  });
+};

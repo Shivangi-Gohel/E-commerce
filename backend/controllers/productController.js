@@ -11,7 +11,7 @@ const addProduct = async(req, res) => {
             return res.status(400).json({ message: "At least one product image is required" });
         }
 
-        const images = req.files.map(file => file.path);
+        const images = req.files.map(file => file.filename);
 
         const newProduct = new Product({
             name,
@@ -94,7 +94,7 @@ const getAllProducts = async(req, res) => {
             products = await Product.find({}).skip(startIndex).limit(limit);
         } else {
             total = await Product.countDocuments({isDeleted: false});
-            products = await Product.find({ isDeleted: false }).skip(startIndex).limit(limit);
+            products = await Product.find({ isDeleted: false }).limit(page*10);
         }
 
         return res.status(200).json({ 

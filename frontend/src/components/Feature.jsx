@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Feature = () => {
+  const navigate = useNavigate();
   return (
     <div className="text-amber-950 bg-amber-950/10 items-center flex flex-col shadow-2xl">
       <div className="text-center pt-40 flex flex-col gap-4">
@@ -88,7 +90,7 @@ const Feature = () => {
           </div>
         </div>
       </div>
-      <button className="mb-40 bg-amber-950 text-white px-12 py-2 rounded-xl flex gap-4">View all products <img src="https://images.icon-icons.com/1993/PNG/512/arrow_arrows_back_direction_left_navigation_right_icon_123236.png" className='h-5 w-5 invert mt-1'  alt="" /></button>
+      <button className="mb-40 bg-amber-950 text-white px-12 py-2 rounded-xl flex gap-4" onClick={() => navigate('/item')}>View all products <img src="https://images.icon-icons.com/1993/PNG/512/arrow_arrows_back_direction_left_navigation_right_icon_123236.png" className='h-5 w-5 invert mt-1'  alt="" /></button>
     </div>
   );
 };

@@ -5,7 +5,7 @@ import upload from "../middlewares/multer.js";
 
 const router = Router();
 
-router.post('/add', verifyAdmin, upload.array("images", 5), addProduct);
+router.post('/add', verifyAdmin, upload.any(), addProduct);
 router.patch('/update', verifyAdmin,  updateProduct);
 router.delete('/delete', verifyAdmin, deleteProduct);
 router.get('/all', verifyJWT, getAllProducts);

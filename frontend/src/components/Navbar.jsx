@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { X, Menu } from "lucide-react";
+import { X, Menu, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
@@ -16,19 +16,12 @@ const Navbar = () => {
           <li className="cursor-pointer">About</li>
           <li className="cursor-pointer">Contact</li>
         </ul>
-        <div className="flex gap-1 cursor-pointer">
-          <span>Search</span>
-          <img
-            src="https://img.icons8.com/?size=100&id=59878&format=png&color=451a03"
-            className="w-6 h-6"
-            alt=""
-          />
-        </div>
         <img
           src="https://img.icons8.com/?size=100&id=85080&format=png&color=451a03"
           className="w-6 h-6 cursor-pointer"
           alt=""
         />
+        <User className="rounded-full border-amber-950 border-2" />
       </div>
 
       <div className="md:hidden flex gap-8 mt-2">
