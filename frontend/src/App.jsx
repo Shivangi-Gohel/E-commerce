@@ -6,6 +6,7 @@ import Login from './pages/Login.jsx'
 import AdminDashboard from './pages/admin/AdminDashboard.jsx'
 import Items from './pages/user/Items'
 import { Toaster } from 'react-hot-toast'
+import Profile from './pages/Profile.jsx'
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/item" element={<Items />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="*" element={<h1 className='text-center text-3xl mt-20'>404 Not Found</h1>} />
       </Routes>
     </Router>
   )

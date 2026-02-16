@@ -6,6 +6,36 @@ const Items = () => {
   const [page, setPage] = useState(1);
   const { data, isLoading, isError } = useGetProducts(page);
   const [displayData, setDisplayData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const sortByPrice = (order) => {
+    const sortedData = [...displayData].sort((a, b) => {
+      if (order === "asc") {
+        return a.price - b.price;
+      }
+      else if (order === "desc") {
+        return b.price - a.price;
+      } 
+    });
+    setDisplayData(sortedData);
+  }
+
+  const sortByCategory = (category) => {
+    const filteredData = data.data.filter((item) => item.category === category);
+    setDisplayData(filteredData);
+  }
+
+  const resetFilters = () => {
+    setDisplayData(data.data);
+  }
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const filteredData = data.data.filter((item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setDisplayData(filteredData);
+  }
 
   useEffect(() => {
     if (data && data.data) {
@@ -25,21 +55,30 @@ const Items = () => {
                 type="text"
                 placeholder="Search products..."
                 className="flex-1 sm:px-6 px-2 py-3 outline-none"
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <button className="bg-amber-900 hover:bg-amber-900/90 text-white sm:px-6 px-2 font-semibold transition">
+              <button className="bg-amber-900 hover:bg-amber-900/90 text-white sm:px-6 px-2 font-semibold transition" onClick={handleSearch}>
                 Search
               </button>
             </form>
           </div>
 
           <div className="sm:flex justify-between mb-8">
-            <select className="border border-amber-950/30 bg-white px-6 py-2 rounded-xl shadow-sm focus:ring-2 focus:ring-amber-400 outline-none">
+            <select className="border border-amber-950/30 bg-white px-6 py-2 rounded-xl shadow-sm focus:ring-2 focus:ring-amber-400 outline-none" onChange={(e) => sortByPrice(e.target.value)}>
               <option value="">Sort by price</option>
+              <option value="asc">Low to High</option>
+              <option value="desc">High to Low</option>
             </select>
 
-            <select className="border border-amber-950/30 bg-white px-6 py-2 rounded-xl shadow-sm focus:ring-2 focus:ring-amber-400 outline-none">
+            <select className="border border-amber-950/30 bg-white px-6 py-2 rounded-xl shadow-sm focus:ring-2 focus:ring-amber-400 outline-none" onChange={(e) => sortByCategory(e.target.value)}>
               <option value="">Sort by category</option>
+              <option value="men's wear">Men's Wear</option>
+              <option value="women's wear">Women's Wear</option>
+              <option value="children's wear">Children's Wear</option>
             </select>
+            <button className="bg-amber-900 hover:bg-amber-900/90 text-white px-6 py-2 rounded-xl shadow-sm transition" onClick={resetFilters}>
+              Reset Filters
+            </button>
           </div>
 
           {displayData && displayData.length > 0 ? (

@@ -42,3 +42,16 @@ export const useLogoutUser = () => {
         }
     })
 }
+
+export const useUpdateUser = () => {
+    return useMutation({
+        mutationKey: ["updateUser"],
+        mutationFn: async (formData) => {
+            const token = localStorage.getItem("token");
+            const res = await axios.patch(`${USER_API}/update`, formData, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return res.data.user;
+        }
+    })
+}
