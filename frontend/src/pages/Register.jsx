@@ -3,6 +3,7 @@ import axios from "axios"
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { URL } from "../../constant.js";
+import toast from "react-hot-toast";
 
 const Register = () => {
     const navigate = useNavigate();
@@ -17,9 +18,10 @@ const Register = () => {
         try{
             const response = await axios.post(`${URL}/auth/register`, data);
             console.log("Registration successful:", response.data);
+            toast.success(response.data || "Registration successful!");
         }
         catch (error){
-            console.error("Registration failed:", error.response?.data || error.message);
+            toast.error(error.response?.data?.message || "Registration failed. Please try again.");
         }
     };
   return (

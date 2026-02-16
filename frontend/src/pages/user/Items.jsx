@@ -20,19 +20,19 @@ const Items = () => {
       <div className="min-h-screen bg-amber-700/10 p-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-center mb-8">
-            <div className="flex w-full max-w-3xl shadow-lg rounded-2xl overflow-hidden">
+            <form className="flex w-full max-w-3xl shadow-lg rounded-2xl border border-amber-950/20 overflow-hidden">
               <input
                 type="text"
                 placeholder="Search products..."
-                className="flex-1 px-6 py-3 border border-amber-950/20 outline-none"
+                className="flex-1 sm:px-6 px-2 py-3 outline-none"
               />
-              <button className="bg-amber-900 hover:bg-amber-900/90 text-white px-6 font-semibold transition">
+              <button className="bg-amber-900 hover:bg-amber-900/90 text-white sm:px-6 px-2 font-semibold transition">
                 Search
               </button>
-            </div>
+            </form>
           </div>
 
-          <div className="flex justify-between mb-8">
+          <div className="sm:flex justify-between mb-8">
             <select className="border border-amber-950/30 bg-white px-6 py-2 rounded-xl shadow-sm focus:ring-2 focus:ring-amber-400 outline-none">
               <option value="">Sort by price</option>
             </select>
@@ -83,7 +83,6 @@ const Items = () => {
             </p>
           )}
 
-          {/* Show More Button */}
           <div className="flex justify-center mt-10">
             <button
               disabled={data?.totalPages === page}

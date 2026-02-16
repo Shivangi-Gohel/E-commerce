@@ -69,7 +69,6 @@ export const useAddProduct = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("Add product response:", res.data);
       return res.data;
     },
   });

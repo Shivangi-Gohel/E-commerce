@@ -65,7 +65,7 @@ const loginUser = async (req, res) => {
     const token = jwt.sign(
       { id: user._id, isAdmin: user.isAdmin },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "7d" }
     );
 
     res.cookie("token", token, {
@@ -132,4 +132,15 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, logoutUser, updateUser, getAllUsers };
+const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    return res.status(200).json({ user });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
+  }
+}
+
+export { registerUser, loginUser, logoutUser, updateUser, getAllUsers, getUserById };
