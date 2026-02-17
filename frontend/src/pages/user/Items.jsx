@@ -1,9 +1,11 @@
 import { useGetProducts } from "@/api/productApi";
 import Navbar from "@/components/Navbar";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Items = () => {
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
   const { data, isLoading, isError } = useGetProducts(page);
   const [displayData, setDisplayData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -109,7 +111,7 @@ const Items = () => {
                     <button className="flex-1 bg-amber-900 hover:bg-amber-900/90 text-white py-2 rounded-xl transition">
                       Add to Cart
                     </button>
-                    <button className="flex-1 border border-amber-900 text-amber-900 hover:bg-amber-100 py-2 rounded-xl transition">
+                    <button onClick={() => navigate(`/item/${item._id}`)} className="flex-1 border border-amber-900 text-amber-900 hover:bg-amber-100 py-2 rounded-xl transition">
                       View
                     </button>
                   </div>
