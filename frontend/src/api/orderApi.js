@@ -4,6 +4,18 @@ import { URL } from "../../constant.js";
 
 const ORDER_API = `${URL}/orders`;
 
+export const useCreateOrder = () => {
+    return useMutation({
+        mutationFn: async (orderData) => {
+            const token = localStorage.getItem("token");
+            const res = await axios.post(`${ORDER_API}/create`, orderData, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return res.data;
+        }
+    });
+}
+
 export const useGetOrders = (page) => {
     return useQuery({
         queryKey: ["orders", page],

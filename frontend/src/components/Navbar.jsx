@@ -42,6 +42,7 @@ const Navbar = () => {
               <li className="cursor-pointer" onClick={() => navigate("/item")}>Shop now</li>
             </ul>
             <img
+              onClick={() => navigate('/cart')}
               src="https://img.icons8.com/?size=100&id=85080&format=png&color=451a03"
               className="w-6 h-6 cursor-pointer"
               alt=""
@@ -56,6 +57,7 @@ const Navbar = () => {
 
       <div className="sm:hidden flex gap-8 mt-2">
         <img
+          onClick={() => navigate('/cart')}
           src="https://img.icons8.com/?size=100&id=85080&format=png&color=451a03"
           className="w-6 h-6 cursor-pointer"
           alt=""

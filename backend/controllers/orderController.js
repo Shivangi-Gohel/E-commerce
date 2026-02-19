@@ -5,7 +5,7 @@ import { User } from '../models/userModel.js';
 const createOrder = async (req, res) => {
     try {
         const userId = req.user.id;
-        const { items } = req.body;
+        const { items, payment } = req.body;
 
         const user = await User.findById(userId);
         if(!user) {
@@ -45,7 +45,8 @@ const createOrder = async (req, res) => {
             userId,
             items: orderedItems,
             totalAmount,
-            address
+            address,
+            payment
         }); 
         await newOrder.save();
         return res.status(201).json({ message: "Order created successfully", orderId: newOrder._id });

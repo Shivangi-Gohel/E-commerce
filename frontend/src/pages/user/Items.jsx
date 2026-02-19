@@ -1,7 +1,9 @@
+import { useAddToCart } from "@/api/cartApi";
 import { useGetProducts } from "@/api/productApi";
 import Navbar from "@/components/Navbar";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Items = () => {
   const [page, setPage] = useState(1);
@@ -9,6 +11,7 @@ const Items = () => {
   const { data, isLoading, isError } = useGetProducts(page);
   const [displayData, setDisplayData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const { mutate: addToCart } = useAddToCart();
 
   const sortByPrice = (order) => {
     const sortedData = [...displayData].sort((a, b) => {
@@ -38,6 +41,20 @@ const Items = () => {
     );
     setDisplayData(filteredData);
   }
+
+  const handleAddToCart = (item) => {
+    addToCart(
+      { productId: item._id, quantity: 1 },
+      {
+        onSuccess: (data) => {
+          toast.success("Product added to cart successfully");
+        },
+        onError: (error) => {
+          toast.error("Failed to add product to cart");
+        },
+      },
+    );
+  };
 
   useEffect(() => {
     if (data && data.data) {
@@ -108,7 +125,7 @@ const Items = () => {
                   </div>
 
                   <div className="flex gap-2 mt-4">
-                    <button className="flex-1 bg-amber-900 hover:bg-amber-900/90 text-white py-2 rounded-xl transition">
+                    <button className="flex-1 bg-amber-900 hover:bg-amber-900/90 text-white py-2 rounded-xl transition" onClick={() => handleAddToCart(item)}>
                       Add to Cart
                     </button>
                     <button onClick={() => navigate(`/item/${item._id}`)} className="flex-1 border border-amber-900 text-amber-900 hover:bg-amber-100 py-2 rounded-xl transition">
