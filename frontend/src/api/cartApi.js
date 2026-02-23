@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { URL } from "../../constant.js";
 
@@ -47,6 +47,7 @@ export const useRemoveFromCart = () => {
 };
 
 export const useClearCart = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async () => {
       const token = localStorage.getItem("token");
@@ -54,6 +55,9 @@ export const useClearCart = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["cart"]);
     },
   });
 }

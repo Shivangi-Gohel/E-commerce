@@ -2,12 +2,15 @@ import { useAddToCart } from "@/api/cartApi";
 import { useGetProductById } from "@/api/productApi";
 import Navbar from "@/components/Navbar";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useCreateOrder } from "@/api/orderApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ItemDetail = () => {
+  const queryClient = useQueryClient();
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data, isLoading, isError } = useGetProductById(id);
   const [showImage, setShowImage] = useState();
   const [qty, setQty] = useState(1);
@@ -24,6 +27,7 @@ const ItemDetail = () => {
       {
         onSuccess: (data) => {
           toast.success("Product added to cart successfully");
+          queryClient.invalidateQueries(["cart"]);
         },
         onError: (error) => {
           toast.error("Failed to add product to cart");
@@ -56,6 +60,7 @@ const ItemDetail = () => {
             onSuccess: () => {
               toast.success("Order created successfully");
               setShowPaymentModal(false);
+              navigate("/item");
             },
             onError: () => {
               toast.error("Failed to create order");
@@ -73,6 +78,7 @@ const ItemDetail = () => {
           onSuccess: () => {
             toast.success("Order created successfully");
             setShowPaymentModal(false);
+            navigate("/item");  
           },
           onError: () => {
             toast.error("Failed to create order");

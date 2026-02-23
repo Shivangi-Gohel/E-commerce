@@ -4,8 +4,10 @@ import Navbar from "@/components/Navbar";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Items = () => {
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
   const { data, isLoading, isError } = useGetProducts(page);
@@ -48,6 +50,7 @@ const Items = () => {
       {
         onSuccess: (data) => {
           toast.success("Product added to cart successfully");
+          queryClient.invalidateQueries(["cart"]);
         },
         onError: (error) => {
           toast.error("Failed to add product to cart");

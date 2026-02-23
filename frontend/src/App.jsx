@@ -9,6 +9,7 @@ import { Toaster } from 'react-hot-toast'
 import Profile from './pages/Profile.jsx'
 import ItemDetail from './pages/user/ItemDetail.jsx'
 import Cart from './pages/user/Cart'
+import OrderDetails from './pages/user/OrderDetails'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/item/:id" element={<ItemDetail />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/orders" element={<OrderDetails />} />
         <Route path="*" element={<h1 className='text-center text-3xl mt-20'>404 Not Found</h1>} />
       </Routes>
     </Router>

@@ -33,6 +33,8 @@ const createOrder = async (req, res) => {
 
             const price = product.price;
             totalAmount += price * quantity;
+            product.stock -= quantity;
+            await product.save();
 
             orderedItems.push({
                 productId,

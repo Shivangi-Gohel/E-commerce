@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { X, Menu, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/context/Context";
 import toast from "react-hot-toast";
 import { useLogoutUser } from "@/api/userApi.js";
+import { useGetCart } from "@/api/cartApi";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,6 +13,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { mutate: logoutUser } = useLogoutUser();
   const { user, setUser } = useUser();
+  const { data: cartData, isLoading } = useGetCart();
+  console.log("Cart data in Navbar:", cartData);
 
   const handleLogout = () => {
     logoutUser(null, {
@@ -26,6 +29,17 @@ const Navbar = () => {
     });
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-between p-4 sticky top-0 bg-amber-900/30 shadow-md backdrop-blur-3xl text-amber-950">
+        Loading...
+      </div>
+    );
+  }
+
+  const cartCount = cartData?.cart?.items
+  ? cartData.cart.items.reduce((acc, item) => acc + item.quantity, 0)
+  : 0;
   return user ? (
     <div className="flex justify-between p-4 sticky top-0 bg-amber-900/30 shadow-md backdrop-blur-3xl text-amber-950">
       <h1
@@ -38,15 +52,29 @@ const Navbar = () => {
         {user.isAdmin == false && (
           <>
             <ul className="flex gap-10 font-semibold">
-              <li className="cursor-pointer" onClick={() => navigate("/")}>Home</li>
-              <li className="cursor-pointer" onClick={() => navigate("/item")}>Shop now</li>
+              <li className="cursor-pointer" onClick={() => navigate("/")}>
+                Home
+              </li>
+              <li className="cursor-pointer" onClick={() => navigate("/item")}>
+                Shop now
+              </li>
             </ul>
-            <img
-              onClick={() => navigate('/cart')}
-              src="https://img.icons8.com/?size=100&id=85080&format=png&color=451a03"
-              className="w-6 h-6 cursor-pointer"
-              alt=""
-            />
+            <div
+              className="relative cursor-pointer"
+              onClick={() => navigate("/cart")}
+            >
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full min-w-[18px] h-5 px-1 flex items-center justify-center text-xs font-semibold">
+                  {cartCount > 9 ? "9+" : cartCount}
+                </span>
+              )}
+
+              <img
+                src="https://img.icons8.com/?size=100&id=85080&format=png&color=451a03"
+                className="w-6 h-6"
+                alt="Cart"
+              />
+            </div>
           </>
         )}
         <User
@@ -56,12 +84,23 @@ const Navbar = () => {
       </div>
 
       <div className="sm:hidden flex gap-8 mt-2">
-        <img
-          onClick={() => navigate('/cart')}
-          src="https://img.icons8.com/?size=100&id=85080&format=png&color=451a03"
-          className="w-6 h-6 cursor-pointer"
-          alt=""
-        />
+        <div
+          className="relative cursor-pointer"
+          onClick={() => navigate("/cart")}
+        >
+          {cartCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full min-w-[18px] h-5 px-1 flex items-center justify-center text-xs font-semibold">
+              {cartCount > 9 ? "9+" : cartCount}
+            </span>
+          )}
+
+          <img
+            src="https://img.icons8.com/?size=100&id=85080&format=png&color=451a03"
+            className="w-6 h-6"
+            alt="Cart"
+          />
+        </div>
+
         <User
           className="rounded-full border-amber-950 border-2"
           onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
@@ -75,8 +114,12 @@ const Navbar = () => {
         {isMenuOpen && (
           <>
             <ul className="flex flex-col p-4 gap-4 absolute top-16 right-4 bg-white border border-gray-200 rounded-md shadow-lg w-40">
-              <li className="cursor-pointer" onClick={() => navigate("/")}>Home</li>
-              <li className="cursor-pointer" onClick={() => navigate("/item")}>Shop now</li>
+              <li className="cursor-pointer" onClick={() => navigate("/")}>
+                Home
+              </li>
+              <li className="cursor-pointer" onClick={() => navigate("/item")}>
+                Shop now
+              </li>
             </ul>
           </>
         )}
@@ -88,7 +131,12 @@ const Navbar = () => {
               Profile
             </li>
             {user.isAdmin == false && (
-              <li className="cursor-pointer">My Orders</li>
+              <li
+                className="cursor-pointer"
+                onClick={() => navigate(`/orders`)}
+              >
+                My Orders
+              </li>
             )}
             <li className="cursor-pointer" onClick={handleLogout}>
               Logout

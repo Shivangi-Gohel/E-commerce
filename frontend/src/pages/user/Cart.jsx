@@ -1,11 +1,13 @@
 import { useClearCart, useGetCart, useRemoveFromCart } from "@/api/cartApi";
 import { useCreateOrder } from "@/api/orderApi";
 import Navbar from "@/components/Navbar";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("");
@@ -31,7 +33,7 @@ const Cart = () => {
       {
         onSuccess: (data) => {
           toast.success("Item removed from cart successfully");
-          window.location.reload();
+          queryClient.invalidateQueries(["cart"]);
         },
         onError: (error) => {
           toast.error("Failed to remove item from cart");
@@ -68,7 +70,7 @@ const Cart = () => {
               toast.success("Order created successfully");
               clearCart();
               setShowPaymentModal(false);
-              window.location.reload();
+              queryClient.invalidateQueries(["cart"]);
             },
             onError: (error) => {
               toast.error("Failed to create order");
@@ -91,7 +93,7 @@ const Cart = () => {
             toast.success("Order created successfully");
             clearCart();
             setShowPaymentModal(false);
-            window.location.reload();
+            queryClient.invalidateQueries(["cart"]);
           },
           onError: (error) => {
             toast.error("Failed to create order");
