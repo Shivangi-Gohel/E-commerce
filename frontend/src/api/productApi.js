@@ -27,6 +27,7 @@ export const useGetProductById = (productId) => {
       });
       return res.data;
     },
+    enabled: !!productId
   });
 };
 

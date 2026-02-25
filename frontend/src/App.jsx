@@ -10,6 +10,10 @@ import Profile from './pages/Profile.jsx'
 import ItemDetail from './pages/user/ItemDetail.jsx'
 import Cart from './pages/user/Cart'
 import OrderDetails from './pages/user/OrderDetails'
+import ProtectedRoute from './context/ProtectedRoute.jsx'
+import PublicRoute from './context/PublicRoute.jsx'
+import NotFound from './pages/NotFound'
+import Unauthorize from './pages/Unauthorize'
 
 function App() {
   return (
@@ -17,15 +21,16 @@ function App() {
       <Toaster position="top-center" reverseOrder={false} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/item" element={<Items />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/item/:id" element={<ItemDetail />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/orders" element={<OrderDetails />} />
-        <Route path="*" element={<h1 className='text-center text-3xl mt-20'>404 Not Found</h1>} />
+        <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/admin" element={<ProtectedRoute requireAdmin={true}><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/item" element={<ProtectedRoute><Items /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/item/:id" element={<ProtectedRoute><ItemDetail /></ProtectedRoute>} />
+        <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+        <Route path="/orders" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
+        <Route path="/unauthorized" element={<Unauthorize />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   )

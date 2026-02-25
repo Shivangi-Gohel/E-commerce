@@ -13,8 +13,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { mutate: logoutUser } = useLogoutUser();
   const { user, setUser } = useUser();
-  const { data: cartData, isLoading } = useGetCart();
-  console.log("Cart data in Navbar:", cartData);
+  const { data: cartData } = useGetCart(!!user);
 
   const handleLogout = () => {
     logoutUser(null, {
@@ -25,21 +24,15 @@ const Navbar = () => {
       },
       onError: (error) => {
         toast.error("Logout failed: " + error.message);
+        setUser(null);
       },
     });
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-between p-4 sticky top-0 bg-amber-900/30 shadow-md backdrop-blur-3xl text-amber-950">
-        Loading...
-      </div>
-    );
-  }
 
   const cartCount = cartData?.cart?.items
-  ? cartData.cart.items.reduce((acc, item) => acc + item.quantity, 0)
-  : 0;
+    ? cartData.cart.items.reduce((acc, item) => acc + item.quantity, 0)
+    : 0;
   return user ? (
     <div className="flex justify-between p-4 sticky top-0 bg-amber-900/30 shadow-md backdrop-blur-3xl text-amber-950">
       <h1
@@ -49,7 +42,7 @@ const Navbar = () => {
         Shopify
       </h1>
       <div className="hidden sm:flex gap-8 mt-2">
-        {user.isAdmin == false && (
+        {user.isAdmin == false ? (
           <>
             <ul className="flex gap-10 font-semibold">
               <li className="cursor-pointer" onClick={() => navigate("/")}>
@@ -76,6 +69,12 @@ const Navbar = () => {
               />
             </div>
           </>
+        ): (
+          <ul className="flex gap-10 font-semibold">
+            <li className="cursor-pointer" onClick={() => navigate("/admin")}>
+              Dashboard
+            </li>
+            </ul>
         )}
         <User
           className="rounded-full border-amber-950 border-2"

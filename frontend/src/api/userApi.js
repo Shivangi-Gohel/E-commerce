@@ -4,6 +4,26 @@ import { URL } from "../../constant.js";
 
 const USER_API = `${URL}/auth`;
 
+export const useRegisterUser = () => {
+    return useMutation({
+        mutationKey: ["register"],
+        mutationFn: async (formData) => {
+            const res = await axios.post(`${USER_API}/register`, formData);
+            return res.data;
+        }
+    })
+}
+
+export const useLoginUser = () => {
+    return useMutation({
+        mutationKey: ["login"],
+        mutationFn: async (formData) => {
+            const res = await axios.post(`${USER_API}/login`, formData, { withCredentials: true });
+            return res.data;
+        }
+    })
+}
+
 export const useGetUsers = (page) => {
     return useQuery({
         queryKey: ["users", page],
@@ -26,7 +46,9 @@ export const useGetUserById = () => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             return res.data.user;
-        }
+        },
+        enabled: !!localStorage.getItem("token"),
+        retry: false
     })
 }
 

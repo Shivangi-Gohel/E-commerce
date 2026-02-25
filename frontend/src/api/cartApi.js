@@ -20,7 +20,7 @@ export const useAddToCart = () => {
   });
 };
 
-export const useGetCart = () => {
+export const useGetCart = (enabled = true) => {
   return useQuery({
     queryKey: ["cart"],
     queryFn: async () => {
@@ -30,6 +30,7 @@ export const useGetCart = () => {
       });
       return res.data;
     },
+    enabled
   });
 };
 

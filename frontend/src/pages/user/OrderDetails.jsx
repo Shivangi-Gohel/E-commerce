@@ -6,19 +6,19 @@ const OrderDetails = () => {
   const navigate = useNavigate();
   const { data, isLoading, error } = useGetOrderById();
 
-  if (isLoading) {
-    return <div className="text-center mt-20 text-xl">Loading order...</div>;
-  }
+  // if (isLoading) {
+  //   return <div className="text-center mt-20 text-xl">Loading order...</div>;
+  // }
 
-  if (error) {
-    return (
-      <div className="text-center mt-20 text-red-500">
-        Failed to load order details
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className="text-center mt-20 text-red-500">
+  //       Failed to load order details
+  //     </div>
+  //   );
+  // }
 
-  const order = data?.orders;
+  const order = data?.orders || [];
 
   return (
     <div>
@@ -29,7 +29,30 @@ const OrderDetails = () => {
           <h1 className="text-3xl font-bold text-amber-900 mb-10">My Orders</h1>
 
           <div className="space-y-10">
-            {order.map((o) => (
+            {!order || order.length === 0 ? (
+    <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl shadow-md border border-amber-100">
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png"
+        alt="No Orders"
+        className="w-24 h-24 mb-6 opacity-70"
+      />
+      <h2 className="text-2xl font-semibold text-amber-900">
+        No Orders Yet
+      </h2>
+      <p className="text-gray-500 mt-2 text-center max-w-md">
+        Looks like you haven’t placed any orders yet. Start shopping and your
+        orders will appear here.
+      </p>
+
+      <button
+        onClick={() => navigate("/item")}
+        className="mt-6 px-6 py-2 bg-amber-900 text-white rounded-xl hover:bg-amber-800 transition"
+      >
+        Start Shopping
+      </button>
+    </div>
+  ) : (
+            order.map((o) => (
               <div
                 key={o._id}
                 className="bg-white rounded-3xl shadow-lg p-8 border border-amber-100"
@@ -117,7 +140,7 @@ const OrderDetails = () => {
                   </div>
                 </div>
               </div>
-            ))}
+            )))}
           </div>
         </div>
       </div>
