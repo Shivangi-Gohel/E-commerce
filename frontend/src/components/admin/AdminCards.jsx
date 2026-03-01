@@ -29,23 +29,23 @@ const AdminCards = () => {
     return <div>Error loading products.</div>;
   }
 
-  const pendingShipping = ordersData.orders.filter(
+  const pendingShipping = ordersData.totalOrders.filter(
     (order) => order.status === "Pending" || order.status === "Processing"
   ).length;
-  const totalRevenue = ordersData.orders
-    .filter((order) => order.status === "Delivered")
+  const totalRevenue = ordersData.totalOrders
+    .filter((order) => order.payment === "Success")
     .reduce((sum, order) => sum + order.totalAmount, 0);
 
   return (
     <>
       <Navbar />
-      <div className="grid gap-6 gris-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 my-8 mx-6">
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 my-8 mx-6">
         <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
           <CardHeader>
             <CardTitle>Pending Shiping</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-blue-600">
+            <p className="text-3xl font-bold text-amber-600">
               {pendingShipping}
             </p>
           </CardContent>
@@ -56,7 +56,7 @@ const AdminCards = () => {
             <CardTitle>Total Products</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-blue-600">
+            <p className="text-3xl font-bold text-amber-600">
               {productData.total}
             </p>
           </CardContent>
@@ -67,7 +67,7 @@ const AdminCards = () => {
             <CardTitle>Total Orders</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-blue-600">
+            <p className="text-3xl font-bold text-amber-600">
               {ordersData.total}
             </p>
           </CardContent>
@@ -78,7 +78,7 @@ const AdminCards = () => {
             <CardTitle>Total revenue</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-blue-600">{totalRevenue}</p>
+            <p className="text-3xl font-bold text-amber-600">{totalRevenue}</p>
           </CardContent>
         </Card>
 
@@ -87,7 +87,7 @@ const AdminCards = () => {
             <CardTitle>Total users</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-blue-600">{usersData.total}</p>
+            <p className="text-3xl font-bold text-amber-600">{usersData.total}</p>
           </CardContent>
         </Card>
       </div>

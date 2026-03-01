@@ -15,8 +15,7 @@ const Profile = () => {
   const { user } = useUser();
   const { mutate: updateUser } = useUpdateUser();
 
-  const handleUpdate = (e) => {
-    e.preventDefault();
+  const handleUpdate = () => {
     updateUser(data, {
       onSuccess: () => {
         setIsUpdating(false);
@@ -80,12 +79,21 @@ const Profile = () => {
             Edit Profile
           </button>
           {isUpdating && (
-            <div className="fixed inset-0 bg-opacity-50 flex justify-center items-center mt-10">
-              <div className="bg-white rounded-lg p-6 w-full max-w-md">
-                <h2 className="text-2xl font-bold mb-4">Update Profile</h2>
-                <form action="">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+              <div className="bg-white w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl shadow-xl p-6">
+                <h2 className="text-xl sm:text-2xl font-bold mb-6 text-amber-900 text-center">
+                  Update Profile
+                </h2>
+
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleUpdate();
+                  }}
+                  className="space-y-4"
+                >
                   <div>
-                    <label className="block text-gray-700 font-semibold mb-2">
+                    <label className="block text-gray-700 font-semibold mb-1">
                       Name
                     </label>
                     <input
@@ -94,11 +102,12 @@ const Profile = () => {
                       onChange={(e) =>
                         setData({ ...data, name: e.target.value })
                       }
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
                     />
                   </div>
-                  <div className="mt-4">
-                    <label className="block text-gray-700 font-semibold mb-2">
+
+                  <div>
+                    <label className="block text-gray-700 font-semibold mb-1">
                       Email
                     </label>
                     <input
@@ -107,11 +116,12 @@ const Profile = () => {
                       onChange={(e) =>
                         setData({ ...data, email: e.target.value })
                       }
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
                     />
                   </div>
-                  <div className="mt-4">
-                    <label className="block text-gray-700 font-semibold mb-2">
+
+                  <div>
+                    <label className="block text-gray-700 font-semibold mb-1">
                       Address
                     </label>
                     <input
@@ -120,11 +130,12 @@ const Profile = () => {
                       onChange={(e) =>
                         setData({ ...data, address: e.target.value })
                       }
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
                     />
                   </div>
-                  <div className="mt-4">
-                    <label className="block text-gray-700 font-semibold mb-2">
+
+                  <div>
+                    <label className="block text-gray-700 font-semibold mb-1">
                       Phone
                     </label>
                     <input
@@ -133,24 +144,26 @@ const Profile = () => {
                       onChange={(e) =>
                         setData({ ...data, phone: e.target.value })
                       }
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
                     />
                   </div>
-                  <div className="mt-4">
+
+                  <div className="flex gap-3 pt-2">
                     <button
                       type="submit"
-                      className="w-full bg-amber-900 hover:bg-amber-900/90 text-white py-2 px-4 rounded"
-                      onClick={handleUpdate}
+                      className="flex-1 bg-amber-900 hover:bg-amber-800 text-white py-2 rounded-lg"
                     >
                       Update Profile
                     </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setIsUpdating(false)}
+                      className="flex-1 border border-amber-900 text-amber-900 py-2 rounded-lg"
+                    >
+                      Cancel
+                    </button>
                   </div>
-                  <button
-                    className="w-full mt-2 text-amber-900 border border-amber-900 py-2 px-4 rounded"
-                    onClick={() => setIsUpdating(false)}
-                  >
-                    Cancel
-                  </button>
                 </form>
               </div>
             </div>

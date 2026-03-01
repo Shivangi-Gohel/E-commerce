@@ -13,6 +13,7 @@ import {
 import { Pencil } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "../ui/button";
+import toast from "react-hot-toast";
 
 const Order = () => {
   const [page, setPage] = useState(1);
@@ -20,7 +21,7 @@ const Order = () => {
   const [openStatusFor, setOpenStatusFor] = useState(null);
   const [loadingStatus, setLoadingStatus] = useState(null);
   const { data, isLoading, isError } = useGetOrders(page);
-  const { mutate: updateOrderStatus } = useUpdateOrderStatus(); 
+  const { mutate: updateOrderStatus } = useUpdateOrderStatus();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -36,7 +37,6 @@ const Order = () => {
     Delivered: [],
     Cancelled: [],
   };
- 
 
   const handleStatusUpdate = (order, newStatus) => {
     setLoadingStatus(order._id);
@@ -46,9 +46,10 @@ const Order = () => {
         onSuccess: (data) => {
           setLoadingStatus(null);
           setOpenStatusFor(null);
+          toast.success(data.message);
           queryClient.invalidateQueries(["orders"]);
-        }
-      }
+        },
+      },
     );
   };
 
@@ -73,13 +74,13 @@ const Order = () => {
               <TableBody>
                 {data.orders.map((order) => (
                   <TableRow key={order._id}>
-                    <TableCell className="text-sm font-semibold">
-                      {order._id}
+                    <TableCell className="text-sm">
+                      #{order._id.slice(-6)}
                     </TableCell>
-                    <TableCell className="text-sm font-semibold">
+                    <TableCell className="text-sm">
                       {order.userId.email}
                     </TableCell>
-                    <TableCell className="text-sm font-semibold">
+                    <TableCell className="text-sm">
                       {order.items.map((item) => (
                         <div key={item._id}>
                           {item.productId?.name} × {item.quantity} - ₹
@@ -87,55 +88,53 @@ const Order = () => {
                         </div>
                       ))}
                     </TableCell>
-                    <TableCell className="text-sm font-semibold">
+                    <TableCell className="text-sm">
                       {order.totalAmount}
                     </TableCell>
-                    <TableCell className="text-sm font-semibold">
+                    <TableCell className="text-sm">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-semibold
                             ${
                               order.payment === "Success"
                                 ? "bg-green-100 text-green-800"
                                 : order.payment === "Pending"
-                                ? "bg-red-100 text-red-800"
-                                : "bg-gray-100 text-gray-700"
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-gray-100 text-gray-700"
                             }
                           `}
                       >
                         {order.payment}
                       </span>
                     </TableCell>
-                    <TableCell className="text-sm font-semibold">
+                    <TableCell className="text-sm">
                       {order.createdAt.split("T")[0]}
                     </TableCell>
-                    <TableCell className="text-sm font-semibold">
-                      {order.address}
-                    </TableCell>
-                    <TableCell className="text-sm font-semibold">
+                    <TableCell className="text-sm">{order.address}</TableCell>
+                    <TableCell className="text-sm">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-semibold
                             ${
                               order.status === "Delivered"
                                 ? "bg-green-100 text-green-800"
                                 : order.status === "Cancelled"
-                                ? "bg-red-100 text-red-800"
-                                : order.status === "Pending"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : order.status === "Shipped"
-                                ? "bg-purple-100 text-purple-800"
-                                : "bg-gray-100 text-gray-700"
+                                  ? "bg-red-100 text-red-800"
+                                  : order.status === "Pending"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : order.status === "Shipped"
+                                      ? "bg-purple-100 text-purple-800"
+                                      : "bg-gray-100 text-gray-700"
                             }
                           `}
                       >
                         {order.status}
                       </span>
                     </TableCell>
-                    <TableCell className="text-sm font-semibold">
+                    <TableCell className="text-sm">
                       <Pencil
                         className="h-5 w-5 text-orange-600 cursor-pointer hover:text-orange-800"
                         onClick={() =>
                           setOpenStatusFor(
-                            openStatusFor === order._id ? null : order._id
+                            openStatusFor === order._id ? null : order._id,
                           )
                         }
                       />
@@ -170,10 +169,15 @@ const Order = () => {
             </Table>
           </CardContent>
           <div className="flex gap-3 m-2 justify-end">
-            <Button disabled={page === 1} onClick={() => setPage(page - 1)}>
+            <Button
+              className="bg-amber-950 hover:bg-amber-800"
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+            >
               prev
             </Button>
             <Button
+              className="bg-amber-950 hover:bg-amber-800"
               disabled={data.orders.length < 10}
               onClick={() => setPage(page + 1)}
             >

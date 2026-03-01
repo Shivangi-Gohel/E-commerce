@@ -82,6 +82,11 @@ const updateOrderStatus = async (req, res) => {
         if(!order) {
             return res.status(404).json({ message: "Order not found" });
         }
+        if(status === "Delivered") {
+            const order = await Order.findById(orderId);
+            order.payment = "Success";
+            await order.save();
+        }
         return res.status(200).json({ message: "Order status updated successfully", order });
     } catch (error) {
         return res.status(500).json({ message: "Server error", error: error.message });
@@ -113,8 +118,9 @@ const getAllOrders = async (req, res) => {
 
         const startIndex = (page - 1) * limit;
         const total = await Order.countDocuments();
+        const totalOrders = await Order.find().populate("items.productId").populate("userId", "name email");
         const orders = await Order.find().sort({createdAt: -1}).populate("items.productId").populate("userId", "name email").skip(startIndex).limit(limit);
-        return res.status(200).json({ orders, total });
+        return res.status(200).json({ orders, total, totalOrders });
     } catch (error) {
         return res.status(500).json({ message: "Server error", error: error.message });
     }

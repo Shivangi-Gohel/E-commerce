@@ -26,7 +26,6 @@ const Product = () => {
   const { data, isLoading, isError } = useGetProducts(page);
   const [openUpdateFor, setOpenUpdateFor] = useState(null);
   const [isAddMode, setIsAddMode] = useState(false);
-  console.log("mode", isAddMode);
   const [addData, setAddData] = useState({
     name: "",
     description: "",
@@ -71,8 +70,6 @@ const Product = () => {
     return <div>Error loading products.</div>;
   }
 
-  console.log("data..", addData);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -103,6 +100,7 @@ const Product = () => {
       {
         onSuccess: (data) => {
           setOpenUpdateFor(null);
+          toast.success("Product updated successfully");
           queryClient.invalidateQueries(["products"]);
         },
       },
@@ -155,22 +153,16 @@ const Product = () => {
               <TableBody>
                 {data.data.map((product) => (
                   <TableRow key={product._id}>
-                    <TableCell className="text-sm font-semibold">
-                      {product._id}
+                    <TableCell className="text-sm">
+                      #{product._id.slice(-6)}
                     </TableCell>
-                    <TableCell className="text-sm font-semibold">
-                      {product.name}
-                    </TableCell>
-                    <TableCell className="text-sm font-semibold">
-                      {product.price}
-                    </TableCell>
-                    <TableCell className="text-sm font-semibold">
-                      {product.stock}
-                    </TableCell>
-                    <TableCell className="text-sm font-semibold">
+                    <TableCell className="text-sm">{product.name}</TableCell>
+                    <TableCell className="text-sm">{product.price}</TableCell>
+                    <TableCell className="text-sm">{product.stock}</TableCell>
+                    <TableCell className="text-sm">
                       {product.isDeleted ? "Deleted" : "Active"}
                     </TableCell>
-                    <TableCell className="text-sm font-semibold">
+                    <TableCell className="text-sm">
                       {product.category}
                     </TableCell>
                     <TableCell>
@@ -183,76 +175,77 @@ const Product = () => {
                         className="h-5 w-5 text-orange-600 cursor-pointer hover:text-orange-800"
                       />
                       {openUpdateFor === product._id && (
-                        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center z-10">
-                          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                          <div className="bg-white w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl shadow-xl p-6">
                             <div className="flex justify-between items-center mb-4">
-                              <h2 className="text-xl font-bold mb-4">
+                              <h2 className="text-lg sm:text-xl font-bold text-amber-900">
                                 Update Product
                               </h2>
                               <X
                                 onClick={() => setOpenUpdateFor(false)}
-                                className="h-6 w-6 text-gray-600 cursor-pointer hover:text-gray-800 mb-4"
+                                className="h-6 w-6 text-gray-600 cursor-pointer hover:text-gray-800"
                               />
                             </div>
+
                             <form className="grid gap-4">
                               <div>
-                                <label className="block mb-1 font-medium">
+                                <label className="block mb-1 font-medium text-gray-700">
                                   Name
                                 </label>
                                 <input
                                   type="text"
-                                  className="w-full border border-gray-300 p-2 rounded"
-                                  placeholder="Product Name"
+                                  className="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-amber-900 outline-none"
                                   name="name"
                                   value={formData.name}
                                   onChange={handleChange}
                                 />
                               </div>
+
                               <div>
-                                <label className="block mb-1 font-medium">
+                                <label className="block mb-1 font-medium text-gray-700">
                                   Price
                                 </label>
                                 <input
                                   type="number"
-                                  className="w-full border border-gray-300 p-2 rounded"
-                                  placeholder="Product Price"
+                                  className="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-amber-900 outline-none"
                                   name="price"
                                   value={formData.price}
                                   onChange={handleChange}
                                 />
                               </div>
+
                               <div>
-                                <label className="block mb-1 font-medium">
+                                <label className="block mb-1 font-medium text-gray-700">
                                   Stock
                                 </label>
                                 <input
                                   type="number"
-                                  className="w-full border border-gray-300 p-2 rounded"
-                                  placeholder="Product Stock"
+                                  className="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-amber-900 outline-none"
                                   name="stock"
                                   value={formData.stock}
                                   onChange={handleChange}
                                 />
                               </div>
+
                               <div>
-                                <label className="block mb-1 font-medium">
+                                <label className="block mb-1 font-medium text-gray-700">
                                   Category
                                 </label>
                                 <input
                                   type="text"
-                                  className="w-full border border-gray-300 p-2 rounded"
-                                  placeholder="Product Category"
+                                  className="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-amber-900 outline-none"
                                   name="category"
                                   value={formData.category}
                                   onChange={handleChange}
                                 />
                               </div>
+
                               <div>
-                                <label className="block mb-1 font-medium">
+                                <label className="block mb-1 font-medium text-gray-700">
                                   Status
                                 </label>
                                 <select
-                                  className="w-full border border-gray-300 p-2 rounded"
+                                  className="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-amber-900 outline-none"
                                   name="isDeleted"
                                   onChange={handleChange}
                                   value={formData.isDeleted}
@@ -261,9 +254,10 @@ const Product = () => {
                                   <option value={true}>Deleted</option>
                                 </select>
                               </div>
+
                               <Button
                                 type="submit"
-                                className="mt-4 w-full"
+                                className="mt-4 w-full bg-amber-950 hover:bg-amber-800 rounded-lg"
                                 onClick={handleUpdateProduct}
                               >
                                 Update Product
@@ -279,10 +273,12 @@ const Product = () => {
             </Table>
 
             {isAddMode && (
-              <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 overflow-y-auto p-4">
-                <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto">
+              <div className="fixed inset-0 flex items-center justify-center z-50 overflow-y-auto p-4">
+                <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto">
                   <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-bold">Add Product</h2>
+                    <h2 className="text-xl font-bold text-amber-900">
+                      Add Product
+                    </h2>
                     <X
                       onClick={() => setIsAddMode(false)}
                       className="h-6 w-6 text-gray-600 cursor-pointer hover:text-gray-800"
@@ -291,7 +287,9 @@ const Product = () => {
 
                   <form className="grid gap-4">
                     <div>
-                      <label className="block mb-1 font-medium">Name</label>
+                      <label className="block mb-1 font-medium text-gray-700">
+                        Name
+                      </label>
                       <input
                         type="text"
                         className="w-full border border-gray-300 p-2 rounded"
@@ -302,7 +300,7 @@ const Product = () => {
                       />
                     </div>
                     <div>
-                      <label className="block mb-1 font-medium">
+                      <label className="block mb-1 font-medium text-gray-700">
                         Description
                       </label>
                       <input
@@ -315,7 +313,9 @@ const Product = () => {
                       />
                     </div>
                     <div>
-                      <label className="block mb-1 font-medium">Price</label>
+                      <label className="block mb-1 font-medium text-gray-700">
+                        Price
+                      </label>
                       <input
                         type="number"
                         className="w-full border border-gray-300 p-2 rounded"
@@ -326,7 +326,9 @@ const Product = () => {
                       />
                     </div>
                     <div>
-                      <label className="block mb-1 font-medium">Category</label>
+                      <label className="block mb-1 font-medium text-gray-700">
+                        Category
+                      </label>
                       <input
                         type="text"
                         className="w-full border border-gray-300 p-2 rounded"
@@ -337,7 +339,9 @@ const Product = () => {
                       />
                     </div>
                     <div>
-                      <label className="block mb-1 font-medium">Stock</label>
+                      <label className="block mb-1 font-medium text-gray-700">
+                        Stock
+                      </label>
                       <input
                         type="number"
                         className="w-full border border-gray-300 p-2 rounded"
@@ -348,7 +352,9 @@ const Product = () => {
                       />
                     </div>
                     <div>
-                      <label className="block mb-1 font-medium">Images</label>
+                      <label className="block mb-1 font-medium text-gray-700">
+                        Images
+                      </label>
                       <input
                         type="file"
                         className="w-full border border-gray-300 p-2 rounded"
@@ -364,7 +370,7 @@ const Product = () => {
                     </div>
                     <Button
                       type="submit"
-                      className="mt-4 w-full"
+                      className="mt-4 w-full bg-amber-950 hover:bg-amber-800"
                       onClick={handleAddProduct}
                     >
                       Add Product
@@ -375,10 +381,15 @@ const Product = () => {
             )}
           </CardContent>
           <div className="flex gap-3 m-2 justify-end">
-            <Button disabled={page === 1} onClick={() => setPage(page - 1)}>
+            <Button
+              className="bg-amber-950 hover:bg-amber-800"
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+            >
               prev
             </Button>
             <Button
+              className="bg-amber-950 hover:bg-amber-800"
               disabled={data.data.length < 10}
               onClick={() => setPage(page + 1)}
             >

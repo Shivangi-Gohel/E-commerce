@@ -28,21 +28,22 @@ const User = () => {
               <TableBody>
                 {data?.users?.map((user) => (
                   <TableRow key={user._id}>
-                    <TableCell className="text-sm font-semibold">{user._id}</TableCell>
-                    <TableCell className="text-sm font-semibold">{user.name}</TableCell>
-                    <TableCell className="text-sm font-semibold">{user.email}</TableCell>
-                    <TableCell className="text-sm font-semibold">{user.isAdmin ? 'Admin' : 'User'}</TableCell>
-                    <TableCell className="text-sm font-semibold">{user.phone}</TableCell>
+                    <TableCell className="text-sm">#{user._id.slice(-6)}</TableCell>
+                    <TableCell className="text-sm">{user.name}</TableCell>
+                    <TableCell className="text-sm">{user.email}</TableCell>
+                    <TableCell className="text-sm">{user.isAdmin ? 'Admin' : 'User'}</TableCell>
+                    <TableCell className="text-sm">{user.phone}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </CardContent>
           <div className="flex gap-3 m-2 justify-end">
-            <Button disabled={page === 1} onClick={() => setPage(page - 1)}>
+            <Button className="bg-amber-950 hover:bg-amber-800" disabled={page === 1} onClick={() => setPage(page - 1)}>
               prev
             </Button>
             <Button
+              className="bg-amber-950 hover:bg-amber-800"
               disabled={data.users.length < 10}
               onClick={() => setPage(page + 1)}
             >

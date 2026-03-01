@@ -29,7 +29,6 @@ const Navbar = () => {
     });
   };
 
-
   const cartCount = cartData?.cart?.items
     ? cartData.cart.items.reduce((acc, item) => acc + item.quantity, 0)
     : 0;
@@ -69,12 +68,12 @@ const Navbar = () => {
               />
             </div>
           </>
-        ): (
+        ) : (
           <ul className="flex gap-10 font-semibold">
             <li className="cursor-pointer" onClick={() => navigate("/admin")}>
               Dashboard
             </li>
-            </ul>
+          </ul>
         )}
         <User
           className="rounded-full border-amber-950 border-2"
@@ -83,22 +82,24 @@ const Navbar = () => {
       </div>
 
       <div className="sm:hidden flex gap-8 mt-2">
-        <div
-          className="relative cursor-pointer"
-          onClick={() => navigate("/cart")}
-        >
-          {cartCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full min-w-[18px] h-5 px-1 flex items-center justify-center text-xs font-semibold">
-              {cartCount > 9 ? "9+" : cartCount}
-            </span>
-          )}
+        {!user.isAdmin && (
+          <div
+            className="relative cursor-pointer"
+            onClick={() => navigate("/cart")}
+          >
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full min-w-[18px] h-5 px-1 flex items-center justify-center text-xs font-semibold">
+                {cartCount > 9 ? "9+" : cartCount}
+              </span>
+            )}
 
-          <img
-            src="https://img.icons8.com/?size=100&id=85080&format=png&color=451a03"
-            className="w-6 h-6"
-            alt="Cart"
-          />
-        </div>
+            <img
+              src="https://img.icons8.com/?size=100&id=85080&format=png&color=451a03"
+              className="w-6 h-6"
+              alt="Cart"
+            />
+          </div>
+        )}
 
         <User
           className="rounded-full border-amber-950 border-2"
@@ -113,12 +114,26 @@ const Navbar = () => {
         {isMenuOpen && (
           <>
             <ul className="flex flex-col p-4 gap-4 absolute top-16 right-4 bg-white border border-gray-200 rounded-md shadow-lg w-40">
-              <li className="cursor-pointer" onClick={() => navigate("/")}>
-                Home
-              </li>
-              <li className="cursor-pointer" onClick={() => navigate("/item")}>
-                Shop now
-              </li>
+              {user.isAdmin ? (
+                <li
+                  className="cursor-pointer"
+                  onClick={() => navigate("/admin")}
+                >
+                  Dashboard
+                </li>
+              ) : (
+                <>
+                  <li className="cursor-pointer" onClick={() => navigate("/")}>
+                    Home
+                  </li>
+                  <li
+                    className="cursor-pointer"
+                    onClick={() => navigate("/item")}
+                  >
+                    Shop now
+                  </li>
+                </>
+              )}
             </ul>
           </>
         )}
